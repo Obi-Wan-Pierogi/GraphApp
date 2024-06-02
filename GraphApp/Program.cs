@@ -20,9 +20,33 @@ e.AddEdge(f, 10).AddEdge(g, 0).AddEdge(h, 0).AddEdge(i, 0);
 f.AddEdge(g, 2).AddEdge(h, 0).AddEdge(i, 0);
 g.AddEdge(h, 1).AddEdge(i, 6);
 h.AddEdge(i, 7);
-graph.PrintMatrix();
 
+graph.PrintMatrix();
 Console.WriteLine();
 
-graph.Dijkstra(graph.CreateAdjMatrix(), 5);
+graph.Dijkstra(5);
+Console.WriteLine();
+
+DirectedGraph directedGraph = new DirectedGraph();
+var a2 = directedGraph.AddVertex("A");
+var b2 = directedGraph.AddVertex("B");
+var c2 = directedGraph.AddVertex("C");
+var d2 = directedGraph.AddVertex("D");
+var e2 = directedGraph.AddVertex("E");
+var f2 = directedGraph.AddVertex("F");
+var g2 = directedGraph.AddVertex("G");
+
+a2.AddEdge(b2, 7).AddEdge(c2, 3).AddEdge(d2, 7);
+b2.AddEdge(c2, 1);
+c2.AddEdge(e2, 32).AddEdge(f2, 3);
+d2.AddEdge(e2, 2).AddEdge(g2, 1);
+e2.AddEdge(f2, 9);
+f2.AddEdge(g2, 7);
+
+
+Console.WriteLine("Graph #2");
+directedGraph.PrintMatrix();
+Console.WriteLine();
+directedGraph.Dijkstra(0);
+
 

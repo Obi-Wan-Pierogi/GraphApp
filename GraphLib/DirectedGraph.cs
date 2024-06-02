@@ -74,8 +74,11 @@ namespace GraphLib
             }
         }
 
-        public void Dijkstra(int[,] graph, int src)
-        {           
+        public void Dijkstra(int src)
+        {
+            int[,] graph = CreateAdjMatrix(); // [src, dest] = weight
+
+
             // set up some buckets to store our info
             int[] dist = new int[Vertices.Count];
             bool[] visits = new bool[Vertices.Count];
