@@ -1,9 +1,11 @@
-﻿using System.Runtime.ExceptionServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 
 namespace GraphLib
 {
     public class DirectedGraph
     {
+        private static readonly int NO_PARENT = -1;
         public int NumVertices { get => Vertices.Count; }
         public List<Vertex> Vertices = new List<Vertex>();
 
@@ -16,10 +18,10 @@ namespace GraphLib
             return v;
         }
 
-        public int?[,] CreateAdjMatrix()
+        public int[,] CreateAdjMatrix()
         {
             // make a 2d array to represent all verticies
-            int?[,] AdjMatrix = new int?[Vertices.Count,Vertices.Count];
+            int[,] AdjMatrix = new int[Vertices.Count,Vertices.Count];
 
             for (int i = 0; i < Vertices.Count; i++)
             {
@@ -45,7 +47,7 @@ namespace GraphLib
         {
             var matrix = CreateAdjMatrix();
 
-            Console.Write("\t");
+            Console.Write("  ");
             for (int i = 0; i < Vertices.Count; i++)
             {
                 Console.Write($" {Vertices[i].Label} ");
@@ -55,7 +57,7 @@ namespace GraphLib
 
             for (int i = 0; i < Vertices.Count; i++)
             {
-                Console.Write($"{Vertices[i].Label}\t");
+                Console.Write($"{Vertices[i].Label} ");
 
                 for (int j = 0; j < Vertices.Count; j++)
                 {
@@ -73,7 +75,7 @@ namespace GraphLib
         }
 
         public void Dijkstra(int[,] graph, int src)
-        {
+        {           
             // set up some buckets to store our info
             int[] dist = new int[Vertices.Count];
             bool[] visits = new bool[Vertices.Count];
@@ -86,6 +88,12 @@ namespace GraphLib
             }
 
             dist[src] = 0;
+
+            // parent array to store the shortest path tree
+            int[] parents = new int[Vertices.Count];
+
+            // the parent of the source is none
+            parents[src] = NO_PARENT;
 
             for (int count = 0; count < Vertices.Count - 1; count++)
             {
@@ -106,27 +114,55 @@ namespace GraphLib
                         the total weight of the path from src to v through the picked node (u) is smaller than the current value of dist[v]
                      */
 
-                    if (!visits[v] &&
-                        graph[u, v] != 0 &&
-                        dist[u] != int.MaxValue &&
-                        dist[u] + graph[u, v] < dist[v]
+                    if (!visits[v] && graph[u, v] != 0
+                        && dist[u] != int.MaxValue
+                        && dist[u] + graph[u, v] < dist[v]
                         )
                     {
                         dist[v] = dist[u] + graph[u, v];
+                        parents[v] = u;
                     }
                 }
             }
 
-            PrintSolution(dist, Vertices.Count);
+            PrintSolution(dist, src, parents);
 
         }
 
-        private void PrintSolution(int[] dist, int count)
+        private void PrintSolution(int[] dist, int src, int[] parents)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Vertex\t Distance\tPath");
+
+            // print the shortest path from the source to each vertex
+            for (int i = 0; i < Vertices.Count; i++)
+                if (i != src)
+                {
+                    Console.Write($"{Vertices[src].Label } -> {Vertices[i].Label} \t {dist[i]} \t\t");
+                    PrintPath(i, parents, Vertices);
+                    Console.WriteLine();                  
+                }
+                else
+                {
+                    // print the source
+                    Console.WriteLine($"{Vertices[i].Label} \t SRC \t\t ");
+                }
+
         }
 
-        private int MinDistance(int[] dist, bool[] visits)
+        private static void PrintPath(int j, int[] parents, List<Vertex> vertices)
+        {
+            // base case : if j is source
+            if (j == NO_PARENT)
+            {
+                return;
+            }
+
+            // recursively print the parent of the current node
+            PrintPath(parents[j], parents, vertices); 
+            Console.Write(vertices[j].Label + " "); 
+        }
+
+        int MinDistance(int[] dist, bool[] visits)
         {
             int min = int.MaxValue;
             int min_index = -1;
@@ -139,7 +175,6 @@ namespace GraphLib
                     min_index = i;
                 }
             }
-
             return min_index;
         }
     }

@@ -8,10 +8,10 @@ namespace GraphTests
         [TestMethod]
         public void AddingAVertexToTheGraph_ShouldReturnAVertex()
         {
-            // arrange
+            // Arrange
             DirectedGraph graph = new DirectedGraph();
 
-            // Acted
+            // Act
             var result = graph.AddVertex("Toast");
 
             // Assert
@@ -23,10 +23,10 @@ namespace GraphTests
         [DataRow("Toast", "Butter", "Lawnmower")]
         public void AddingMoreThanOneNodeToTheGraph_ShouldRetainEachOfThem(string one, string two, string three)
         {
-            // arrange
+            // Arrange
             DirectedGraph graph = new DirectedGraph();
 
-            // act
+            // Act
             graph.AddVertex(one);
             graph.AddVertex(two);
             graph.AddVertex(three);
